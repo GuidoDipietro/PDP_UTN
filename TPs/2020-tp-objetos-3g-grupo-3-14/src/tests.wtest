@@ -1,0 +1,77 @@
+import piratas.*
+
+describe "Tests piratas" {
+	
+	const pirataPapa = new Pirata(pertenencias=[papa,papa,papa], habilidad="Comer papas")
+	const pirataGarfio = new Pirata(pertenencias=[mapaMdq, garfio], habilidad="Conquistar", monedas=5)
+	const marcelo = new Pirata(pertenencias=[mapaMdq], habilidad="Imaginar", monedas=1)
+	const barbaRoja = new Pirata(pertenencias=[polvoDeHada, brujula], habilidad="Volar", monedas=3)
+	
+	const busquedaDelTesoro = new BusquedaDelTesoro()
+	const saqueo = new Saqueo(cantMinDeMonedas = 1, objetivo = 'barco')
+	
+	const barcoEjemplo = new BarcoPirata(capacidadMax = 3, mision= busquedaDelTesoro)
+	
+	const ciudadCostera = new Ciudad(habitantes=2, nombre='mar del plata', souvenir=alfajores)
+	
+	test "Las papas son gratis" {
+		assert.equals(0, papa.precio())
+	}
+	
+	// Test 1
+	test "Garfio puede realizar la busqueda del tesoro" {
+		assert.that(busquedaDelTesoro.pirataCumpleCondicion(pirataGarfio))
+	}
+	
+	test "Pirata Papa no puede realizar la busqueda del tesoro" {
+		assert.notThat(busquedaDelTesoro.pirataCumpleCondicion(pirataPapa))
+	}
+	
+	// Test 2 y 3
+	test "Garfio puede ser parte del barcoEjemplo" {
+		assert.that(pirataGarfio.puedeCumplir(barcoEjemplo.mision()))
+		assert.that(barcoEjemplo.tieneLugar())
+	}
+	
+	test "Pirata Papa no puede ser parte del barcoEjemplo porque no puede cumplir la mision y esta lleno" {
+		3.times({ i => barcoEjemplo.reclutar(pirataGarfio) })
+		assert.notThat(pirataPapa.puedeCumplir(barcoEjemplo.mision()))
+		assert.notThat(barcoEjemplo.tieneLugar())
+	}
+	
+	// Test 4
+	test "barcoEjemplo decide cambiar la mision busqueda de tosoro a saqueo" {
+		assert.notEquals(barcoEjemplo.mision(), saqueo)
+		barcoEjemplo.cambiarDeMision(saqueo)
+		assert.equals(saqueo, barcoEjemplo.mision())		
+	}
+	
+	// Test 5
+	test "en el barcoEjemplo, garfio tiene es el que mas pertenencias tiene" {
+		barcoEjemplo.reclutar(pirataGarfio)
+		barcoEjemplo.reclutar(barbaRoja)
+		barcoEjemplo.reclutar(marcelo)
+		
+		const pirataConMasPertenencias = barcoEjemplo.pirataConMasPertenencias()
+		assert.equals(pirataGarfio, pirataConMasPertenencias)		
+	}
+	
+	// Test 6 
+	test "barcoEjemplo realiza un anclaje en mar del plata y todos se llevan alfajores" {
+		barcoEjemplo.reclutar(pirataGarfio)
+		barcoEjemplo.anclarEn(ciudadCostera)
+		assert.that(pirataGarfio.tiene("alfajores"))
+	}
+	
+	// Test 7
+	test "el barcoEjemplo puede cumplir la mision, pero no esta completo por lo cual no es temible" {
+		barcoEjemplo.reclutar(pirataGarfio)
+		barcoEjemplo.reclutar(barbaRoja)
+		
+		assert.notThat(barcoEjemplo.esTemible())
+	}
+	
+	test "garfio se anima a saquear la ciudad costera" {
+		assert.that(pirataGarfio.seAnimaASaquear(ciudadCostera))
+	}
+}

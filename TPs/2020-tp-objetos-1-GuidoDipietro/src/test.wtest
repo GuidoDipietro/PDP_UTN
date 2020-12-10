@@ -1,0 +1,29 @@
+import rolando.*
+
+test "Rolando tiene 35 de hechicería" {
+	assert.equals(35, rolando.nivelDeHechiceria())
+}
+
+test "Espectro cambia el nombre a 'el juego'" {
+	espectroMalefico.nuevoNombre("el juego")
+	assert.equals(8, espectroMalefico.poder())
+}
+
+test "Nuevo hechizo preferido de Rolando (espectro)" {
+	assert.equals(35,rolando.nivelDeHechiceria())
+	rolando.cambiarHechizoPreferido(espectroMalefico)
+	assert.equals(56, rolando.nivelDeHechiceria())
+}
+
+test "Rolando prefiere espectro y ocurre un eclipse" {
+	rolando.cambiarHechizoPreferido(espectroMalefico)
+	assert.equals(56, rolando.nivelDeHechiceria())
+	fuerzaOsc.eclipse()
+	assert.equals(61, rolando.nivelDeHechiceria())
+}
+
+test "Rolando no le gana a Java, pero cuando equipa Python sí" {
+	assert.notThat(rolando.leGanaA(java))
+	rolando.equiparArtefacto(python)
+	assert.that(rolando.leGanaA(java))
+}

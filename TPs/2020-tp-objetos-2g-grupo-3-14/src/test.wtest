@@ -1,0 +1,78 @@
+import rolando.*
+import hechizos.*
+import enemigos.*
+import objetos.*
+import ciudades.*
+
+// TESTS SEGUNDA PARTE //
+
+test "1 y 3, Probando la nueva arma, el PELAPAPAS" {
+	rolando.cambiarArtefacto(pelapapas)
+	pelapapas.pelarPapas(700)
+	pelapapas.toggleMaterial()
+	assert.that(rolando.leGana(cthulu))
+}
+
+test "2, Poder del ejército de Rolando" {
+	assert.equals(rolando.ejercito(), [])
+	10.times{ i => rolando.reclutar(goblin)} //tiene 10 veces al goblin ahora
+	assert.equals(rolando.resistenciaTotalEjercito(), 50)
+}
+
+test "4, Rolando puede defender Melbourne de Cthulu pero después no" {
+	assert.that(rolando.puedeDefenderCiudadEnemigo(melbourne, [cthulu, goblin]))
+	cthulu.enloquecer()
+	assert.that(!rolando.puedeDefenderCiudadEnemigo(melbourne, [cthulu, goblin]))
+}
+
+test "5, Los coeficientes defensivos siempre son mayores si las refuerza Rolando" {
+	const coef = melbourne.coeficienteDefensivo()
+	assert.equals(buenosAires.coeficienteDefensivo(), 10)
+	rolando.reforzarCiudades([buenosAires, melbourne])
+	rolando.reforzarCiudades([buenosAires, melbourne])
+	rolando.reforzarCiudades([buenosAires, melbourne])
+	rolando.reforzarCiudades([buenosAires, melbourne])
+	assert.equals(buenosAires.coeficienteDefensivo(), 19)
+	assert.that(coef <= melbourne.coeficienteDefensivo())
+}
+
+
+// TESTS PRIMERA PARTE //
+
+test "Fuerza Rolando" {
+	assert.equals(3*espectroMalefico.poder() + fuerzaOscura.valor(), rolando.nivelDeHechiceria())
+	fuerzaOscura.eclipse()
+	assert.equals(10, fuerzaOscura.valor())
+	assert.equals(3*espectroMalefico.poder() + fuerzaOscura.valor(), rolando.nivelDeHechiceria())
+}
+
+test "Cambiar nombre espectro" {
+	espectroMalefico.cambiarNombre("crucio")
+	assert.equals(6, espectroMalefico.poder())
+	assert.equals(23, rolando.nivelDeHechiceria())
+}
+
+test "Cambiar hechizo preferido" {
+	assert.equals(rolando.hechizoPreferido(), espectroMalefico)
+	rolando.cambiarHechizo(hechizoBasico)
+	assert.equals(rolando.hechizoPreferido(), hechizoBasico)
+	assert.equals(rolando.nivelDeHechiceria(), 35)
+}
+
+test "Eclipse" {
+	fuerzaOscura.eclipse()
+	assert.equals(fuerzaOscura.valor(), 10)
+	assert.equals(cthulu.resistencia(), 100)
+	assert.equals(rolando.nivelDeHechiceria(), 58)
+	assert.equals(mascaraOscura.unidades(), 5)
+}
+
+test "Le gana" {
+	assert.that(rolando.leGana(goblin))
+	assert.that(rolando.leGana(cthulu))
+	fuerzaOscura.eclipse()
+	assert.that(!rolando.leGana(cthulu))
+	assert.that(rolando.leGana(elfoOscuro))
+	rolando.cambiarHechizo(hechizoInservible)
+	assert.that(!rolando.leGana(elfoOscuro))
+}
