@@ -3,4 +3,8 @@ Todos los parciales, TPs, y desafíos hechos en la asignatura "Paradigmas de Pro
 
 <hr>
 
-Aclaración: los archivos en las subcarpetas dentro de "Desafíos" que no tienen el nombre "Guido" (o 'giudo', en un caso) no son de mi autoría y no me pertenecen.
+### Aclaración
+
+Los archivos en las subcarpetas dentro de "Desafíos" que no tienen el nombre "Guido" (y los archivos dentro de una carpeta que dice 'giudo', en un cómico caso) no son de mi autoría y no me pertenecen.  
+
+Todos los TPs fueron realizados en un grupo de a 4, la autoría es de Cristóbal Szkutnik, Pablo Pellegrini, Pablo Ayala, Guido Dipietro.
