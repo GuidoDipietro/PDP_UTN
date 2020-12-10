@@ -1,0 +1,57 @@
+import intensamente.*
+
+test "Felicidad" {
+	assert.that(riley.muyFeliz())
+}
+
+test "Riley empieza alegre" {
+	assert.equals(alegria, riley.emocionDominante())
+}
+
+test "Riley vive dos eventos" {
+	assert.equals(riley.recuerdosDelDia().size(), 0)
+	riley.emocionDominante(furia)
+	riley.vivirEvento("El IDE de Wollok dice 'waiting for operation Build to finish'")
+	riley.emocionDominante(alegria)
+	riley.vivirEvento("Comer una medialuna con jamon y queso")
+	assert.equals(riley.recuerdosDelDia().size(), 2)
+}
+
+test "Riley vive un evento y se asienta" {
+	assert.equals(riley.emocionDominante(), alegria)
+	assert.equals(riley.pensamientosCentrales().size(), 0)
+	riley.vivirEvento("Cumple años")
+	riley.recuerdosDelDia().first().asentarse(riley)
+	assert.equals(riley.pensamientosCentrales().size(), 1)
+}
+
+test "Se asienta un pensamiento difícil" {
+	riley.vivirEvento("Este es un pensamiento que tiene once palabras en su descripción")
+	riley.recuerdosDelDia().first().asentarse(riley)
+	assert.equals(riley.pensamientosCentralesDificiles().size(), 1)
+}
+
+test "Riley tiene un recuerdo triste y luego se pone alegre, lo niega?" {
+	riley.emocionDominante(tristeza)
+	riley.vivirEvento("El IDE de Wollok sigue sin compilar")
+	riley.emocionDominante(alegria)
+	assert.that(riley.niegaAlguno())
+}
+
+test "A dormir" {
+	riley.emocionDominante(furia)
+	riley.vivirEvento("Se extiende la cuarentena una vez más") // no se asienta por ser furia
+	riley.vivirEvento("Se llega al día 1000") // no se asienta por ser furia
+	riley.vivirEvento("Wollok sigue sin compilar") // no se asienta por ser furia (aunque tiene Wollok)
+	riley.emocionDominante(tristeza)
+	riley.vivirEvento("Riley tiene nietos y sigue en cuarentena") // se asienta
+	riley.emocionDominante(alegria)
+	riley.vivirEvento("Riley puede salir de su casa finalmente a la edad de 114") // se asienta
+	riley.vivirEvento("Le cuentan a Riley que Wollok ya no usa más Eclipse") // se asienta
+	riley.dormir()
+	assert.equals(riley.felicidad(), 1000)
+	assert.equals(riley.pensamientosCentrales().size(), 3)
+	assert.equals(riley.recuerdosDelDia(), [])
+}
+
+// me aburrí de hacer tests

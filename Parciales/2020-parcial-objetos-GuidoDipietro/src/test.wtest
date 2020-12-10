@@ -1,0 +1,73 @@
+import mundo.*
+import diario.*
+
+describe "Tests del parcial" {
+	
+	test "Indicadores de Argentina" {
+		assert.equals(pbiPerCapita.valor(argentina), 1/45000000)
+		assert.equals(gini.valor(argentina), 87758/4290)
+		assert.equals(accesoUniversidad.valor(argentina), 0.2)
+		assert.equals(ingresosAltos.valor(argentina), 87758)
+		assert.equals(nombrista.valor(argentina), 90)
+		assert.equals(cantDecilesPares.valor(argentina), 4)
+	}
+	
+	test "Australia es el mejor país del mundo" {
+		assert.equals(mundo.mejorPais().nombre(), "Australia")
+	}
+	
+	test "Australia es el mejor país del mundo pero Argentina aumenta su PBI muchísimo y lo supera" {
+		assert.equals(mundo.mejorPais().nombre(), "Australia")
+		argentina.pbi(1000000000000)
+		assert.equals(mundo.mejorPais().nombre(), "Argentina")
+	}
+	
+	test "Edición del diario de Argentina" {
+		const bolsaDeTrabajo = [estebanQuito, soniaDora, mark, chocolato]
+		bolsaDeTrabajo.forEach({ persona => diario.contratar(persona) })
+		diario.edicion(argentina)
+		assert.equals(diario.articulos().size(), 3)
+	}
+//	Escribir los tests necesarios para probar que partiendo del diario sin un historial,
+//	con tres analistas y un país, dos de ellos (al menos uno que sea panqueque)
+//	escriban sus correspondientes artículos.
+	test "Lo que dice arriba" {
+		assert.equals(diario.articulos().size(), 0)
+		[soniaDora, mark, chocolato].forEach({ persona => diario.contratar(persona) })
+		diario.edicion(tuvalu)
+		// Sonia Tuvalu Dora no puede escribir sobre Tuvalu
+		assert.equals(diario.articulos().size(), 2)
+	}
+//	Probar también cómo un analista que cambia
+//	algo de estrategia genera artículos diferentes.
+	test "Panqueque escribe artículos distintos" {
+		const primero = soniaDora.escribirArticulo(argentina)
+		soniaDora.indiceNegativo( cantDecilesPares )
+		const segundo = soniaDora.escribirArticulo(argentina)
+		assert.that( primero.cifraDestacada() != segundo.cifraDestacada() )
+	}
+}
+
+/*
+ * Polimorfismo y herencia:
+ * 
+ * Los 'índices' que miden determinados aspectos de los países se modelaron de forma polimórfica con un método
+ * 'valor(pais)' en común. Esto permite cambiar la 'estrategia' positiva y negativa de, por ejemplo, los analistas panqueque.
+ * Además, los países se modelaron de forma polimórfica, lo que permite crear una lista de "países" en el objeto "mundo"
+ * y hallar el país que maximice la condición de cierto índice, ya que todos aceptan los mensajes que se encuentran en
+ * cada uno.
+ * 
+ * Por otro lado, todos los analistas escriben artículos de formas parecidas, solamente cambian generalmente sus índices o
+ * los títulos. Para evitar escribir la función escribirArticulo(pais) muchas veces, se puede crear una clase padre Analista
+ * que contiene el método genérico para escribir un artículo (y el nombre del analista), y luego crear sub-clases para
+ * cada tipo de analista que tendrán sus consideraciones en cada caso.
+ * 
+ * Además, como una solución alternativa para las estrategias de los analistas, escribí un nuevo constructor de la clase
+ * para que inicialice una variable "indice", que contiene un objeto de los definidos en 'mundo.wlk', y el método
+ * cifraDestacada(pais) solamente envía el mensaje '.valor(pais)' al objeto que esté en dicha variable, sin importar
+ * cuál sea. Esto está definido en la clase padre Analista porque muy pocos tienen una lógica que sea muy distinta a eso.
+ * 
+ * El modelado de los Analistas es el concepto de Herencia en acción.
+ * 
+ * Dejé, igualmente, la primera solución que había pensado comentada (simplemente override al método cifraDestacada)
+ */
